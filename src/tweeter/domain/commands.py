@@ -10,3 +10,9 @@ class Command:
 class PostTweet(Command):
     user_id: UUID
     content: str
+
+
+@dataclass
+class FollowUser(Command):
+    user_id: UUID
+    following_id: UUID

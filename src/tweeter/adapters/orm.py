@@ -34,6 +34,13 @@ tweet_table = Table(
     Column("user_id", ForeignKey("users.id")),
 )
 
+follower_table = Table(
+    "followers",
+    mapper_registry.metadata,
+    Column("following_id", UUID, ForeignKey("users.id"), primary_key=True),
+    Column("follower_id", UUID, ForeignKey("users.id"), primary_key=True),
+)
+
 
 def start_mappers():
     logger.info("Staring mappers")
@@ -47,6 +54,13 @@ def start_mappers():
                 order_by=tweet_table.c.create_dt.desc(),
                 collection_class=set,
             ),
+            "followers": relationship(
+                model.User,
+                secondary=follower_table,
+                primaryjoin=user_table.c.id == follower_table.c.following_id,
+                secondaryjoin=user_table.c.id == follower_table.c.follower_id,
+                backref="followings",
+            )
         },
     )
     mapper_registry.map_imperatively(

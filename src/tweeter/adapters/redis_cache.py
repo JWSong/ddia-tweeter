@@ -5,7 +5,6 @@ from uuid import UUID
 import redis
 
 from tweeter.config import get_settings
-from tweeter.domain import model
 
 logger = logging.getLogger(__name__)
 
@@ -24,3 +23,8 @@ def write(tweet_id: UUID, user_id: UUID, content: str, create_dt: datetime.datet
             "create_dt": create_dt.isoformat(),
         },
     )
+
+
+def read(user_id: UUID):
+    logging.info(f"reading from cache: {user_id}")
+    return r.hgetall(f"{user_id}:tweets").values()
