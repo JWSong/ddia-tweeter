@@ -39,3 +39,17 @@ def post_tweet(user_id: UUID, bus: MessageBus = Depends(get_message_bus)):
     except Exception as e:
         return JSONResponse(status_code=400, content={"message": str(e)})
     return JSONResponse(status_code=201, content={"message": "Tweet posted"})
+
+
+@app.post("/users/{user_id}/followers/{follower_id}")
+def follow_user(
+    user_id: UUID,
+    follower_id: UUID,
+    bus: MessageBus = Depends(get_message_bus),
+):
+    try:
+        cmd = commands.FollowUser(user_id=user_id, following_id=follower_id)
+        bus.handle(message=cmd)
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"message": str(e)})
+    return JSONResponse(status_code=201, content={"message": f"User followed {follower_id}"})

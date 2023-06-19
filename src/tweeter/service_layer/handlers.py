@@ -25,6 +25,16 @@ def became_celebrity(event: events.UserPromoted, uow: unit_of_work.AbstractUnitO
         uow.commit()
 
 
+def follow_user(
+    cmd: commands.FollowUser, uow: unit_of_work.AbstractUnitOfWork
+):
+    with uow:
+        user = uow.users.get(cmd.user_id)
+        user_to_follow = uow.users.get(cmd.following_id)
+        user.follow(user_to_follow)
+        uow.commit()
+
+
 EVENT_HANDLERS = {
     events.TweetPosted: put_in_cache_if_celeb,
     events.UserPromoted: became_celebrity,
@@ -32,4 +42,5 @@ EVENT_HANDLERS = {
 
 COMMAND_HANDLERS = {
     commands.PostTweet: post_tweet,
+    commands.FollowUser: follow_user,
 }

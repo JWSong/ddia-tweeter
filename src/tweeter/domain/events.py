@@ -18,3 +18,9 @@ class TweetPosted(Event):
     user_id: UUID
     content: str
     create_dt: datetime.datetime
+
+
+@dataclass
+class UserFollowed(Event):
+    user_id: UUID
+    following_id: UUID

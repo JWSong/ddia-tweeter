@@ -10,10 +10,12 @@ class User:
         self,
         ref: UUID,
         name: str,
-        timeline: set["Tweet"],
+        timeline=None,
         is_celebrity: bool = False,
         version_number: int = 0,
     ):
+        if timeline is None:
+            timeline = set()
         self.id = ref
         self.name = name
         self.timeline: set["Tweet"] = timeline
@@ -36,6 +38,15 @@ class User:
 
     def become_celebrity(self):
         self.is_celebrity = True
+
+    def follow(self, user: "User"):
+        self.followers.add(user)
+        self.events.append(
+            events.UserFollowed(
+                user_id=self.id,
+                following_id=user.id,
+            )
+        )
 
 
 class Tweet:

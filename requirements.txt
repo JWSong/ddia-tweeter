@@ -4,3 +4,5 @@ sqlalchemy
 asyncpg
 pydantic
 redis
+uvicorn
+pytest
